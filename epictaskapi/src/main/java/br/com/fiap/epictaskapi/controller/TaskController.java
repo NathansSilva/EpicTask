@@ -1,9 +1,12 @@
 package br.com.fiap.epictaskapi.controller;
 
-import java.util.List;
-
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,28 +27,30 @@ public class TaskController {
 
     @Autowired
     private TaskService service;
-    
+
     @GetMapping
-    public List<Task> index(){
-        return service.listAll();
+    @Cacheable("task")
+    public Page<Task> index(@PageableDefault(size = 10) Pageable paginacao) {
+        return service.listAll(paginacao);
     }
 
     @PostMapping
-    public ResponseEntity<Task> create(@RequestBody Task task){
+    public ResponseEntity<Task> create(@RequestBody Task task) {
         service.save(task);
         return ResponseEntity.status(HttpStatus.CREATED).body(task);
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Task> show(@PathVariable Long id){
+    public ResponseEntity<Task> show(@PathVariable Long id) {
         return ResponseEntity.of(service.getById(id));
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<Object> destroy(@PathVariable Long id){
+    @CacheEvict(value = "task", allEntries = true)
+    public ResponseEntity<Object> destroy(@PathVariable Long id) {
         var optional = service.getById(id);
 
-        if(optional.isEmpty())
+        if (optional.isEmpty())
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 
         service.deleteById(id);
@@ -53,21 +58,21 @@ public class TaskController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Task> update(@PathVariable Long id, @RequestBody Task newTask){
-        
-        //buscar a tarefa no bd
+    public ResponseEntity<Task> update(@PathVariable Long id, @RequestBody Task newTask) {
+
+        // buscar a tarefa no bd
         var optional = service.getById(id);
 
-        //verifica se existe
-        if(optional.isEmpty())
+        // verifica se existe
+        if (optional.isEmpty())
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 
-        //atualizar os valores
+        // atualizar os valores
         var task = optional.get();
         BeanUtils.copyProperties(newTask, task);
         task.setId(id);
 
-        //salvar no bd
+        // salvar no bd
         service.save(task);
 
         return ResponseEntity.ok().build();
