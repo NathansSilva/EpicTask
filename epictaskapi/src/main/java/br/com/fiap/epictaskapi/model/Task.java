@@ -7,15 +7,14 @@ import javax.persistence.Id;
 
 @Entity
 public class Task {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+ 
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
     private String description;
-    private Integer score;
-    private Integer status;
-
+    private int score;
+    private int status;
+    
     public Task() {
     }
 
@@ -24,7 +23,7 @@ public class Task {
         this.description = description;
     }
 
-    public Task(String title, String description, Integer score, Integer status) {
+    public Task(String title, String description, int score, int status) {
         this.title = title;
         this.description = description;
         this.score = score;
@@ -55,30 +54,27 @@ public class Task {
         this.description = description;
     }
 
-    public Integer getScore() {
+    public int getScore() {
         return score;
     }
 
-    public void setScore(Integer score) {
+    public void setScore(int score) {
         this.score = score;
     }
 
-    public Integer getStatus() {
+    public int getStatus() {
         return status;
     }
 
-    public void setStatus(Integer status) {
+    public void setStatus(int status) {
         this.status = status;
     }
 
     @Override
     public String toString() {
-        return "Task{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", description='" + description + '\'' +
-                ", score=" + score +
-                ", status=" + status +
-                '}';
+        return "Task [description=" + description + ", id=" + id + ", score=" + score + ", status=" + status
+                + ", title=" + title + "]";
     }
+
+
 }
