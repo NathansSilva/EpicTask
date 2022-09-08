@@ -1,11 +1,15 @@
 package br.com.fiap.epictaskapi.controller;
 
+//import java.util.List;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
+//import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+//import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+//import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.fiap.epictaskapi.model.Task;
@@ -34,6 +39,7 @@ public class TaskController {
         return service.listAll(paginacao);
     }
 
+    // HashMap - Redis
     @PostMapping
     public ResponseEntity<Task> create(@RequestBody Task task) {
         service.save(task);
@@ -59,11 +65,10 @@ public class TaskController {
 
     @PutMapping("{id}")
     public ResponseEntity<Task> update(@PathVariable Long id, @RequestBody Task newTask) {
-
-        // buscar a tarefa no bd
+        // buscar a tarefa no BD
         var optional = service.getById(id);
 
-        // verifica se existe
+        // verificar se existe
         if (optional.isEmpty())
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 
@@ -72,10 +77,11 @@ public class TaskController {
         BeanUtils.copyProperties(newTask, task);
         task.setId(id);
 
-        // salvar no bd
+        // salvar no BD
         service.save(task);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(task);
+
     }
 
 }

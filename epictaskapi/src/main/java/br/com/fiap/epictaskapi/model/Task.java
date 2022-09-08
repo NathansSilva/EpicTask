@@ -7,15 +7,14 @@ import javax.persistence.Id;
 
 @Entity
 public class Task {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+ 
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
     private String description;
     private int score;
     private int status;
-
+    
     public Task() {
     }
 
@@ -82,5 +81,6 @@ public class Task {
         return "Task [description=" + description + ", id=" + id + ", score=" + score + ", status=" + status
                 + ", title=" + title + "]";
     }
+
 
 }

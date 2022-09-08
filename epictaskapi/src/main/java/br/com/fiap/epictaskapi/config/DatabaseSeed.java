@@ -5,7 +5,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.context.annotation.Profile;
+//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import br.com.fiap.epictaskapi.model.Task;
 import br.com.fiap.epictaskapi.model.User;
@@ -13,6 +15,7 @@ import br.com.fiap.epictaskapi.repository.TaskRepository;
 import br.com.fiap.epictaskapi.repository.UserRepository;
 
 @Configuration
+@Profile("dev")
 public class DatabaseSeed implements CommandLineRunner {
 
     @Autowired
@@ -21,24 +24,28 @@ public class DatabaseSeed implements CommandLineRunner {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
     @Override
     public void run(String... args) throws Exception {
 
-        userRepository.save(new User(
-                "Matheus Sanches",
-                "matheus@fiap.com.br",
-                new BCryptPasswordEncoder().encode("123")));
+        userRepository.save(
+                new User(
+                        "João Carlos",
+                        "joao@fiap.com.br",
+                        passwordEncoder.encode("123")));
 
         taskRepository.saveAll(List.of(
-                new Task("Modelar o banco", "Modelagem das tabelas", 20),
+                new Task("Modelar o Banco", "Modelagem das tabelas", 20),
                 new Task("Bug", "Modelagem das tabelas", 50),
                 new Task("Login", "Modelagem das tabelas", 12),
                 new Task("Deploy", "Modelagem das tabelas", 98),
-                new Task("Testes", "Modelagem das tabelas", 10),
-                new Task("Autenticação", "Modelagem das tabelas", 21),
-                new Task("Cadastro de usuário", "Modelagem das tabelas", 18),
-                new Task("Consulta de tarefas", "Modelagem das tabelas", 76),
-                new Task("Prototipo", "Prototipar as telas", 9)));
+                new Task("Testes", "Modelagem das tabelas", 76),
+                new Task("Autenticação", "Modelagem das tabelas", 10),
+                new Task("Cadastro de usuário", "Modelagem das tabelas", 21),
+                new Task("Consulta de tarefas", "Modelagem das tabelas", 18),
+                new Task("Prototipo", "Protipar as telas", 9)));
 
     }
 
