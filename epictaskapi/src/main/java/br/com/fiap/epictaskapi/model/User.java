@@ -3,7 +3,6 @@ package br.com.fiap.epictaskapi.model;
 import java.util.Collection;
 import java.util.List;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -11,32 +10,53 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.util.Assert;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
+
+import br.com.fiap.epictaskapi.dto.UserDto;
 
 @Entity
 @Table(name = "TB_USER")
 public class User implements UserDetails {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NotBlank
     private String name;
-    @Column(unique = true)
+    @Email
     private String email;
+    @Size(min = 8)
+    @JsonProperty(access = Access.WRITE_ONLY)
     private String password;
 
     @ManyToMany(fetch = FetchType.EAGER)
     private List<Role> roles;
 
-    public User() {
+    public User name(String name){
+        Assert.notNull(name, "invalid name");
+        this.name = name;
+        return this;
     }
 
-    public User(String name, String email, String password) {
-        this.name = name;
+    public User email(String email){
+        Assert.notNull(email, "invalid email");
         this.email = email;
+        return this;
+    }
+
+    public User password(String password){
+        Assert.notNull(password, "invalid password");
         this.password = password;
+        return this;
     }
 
     public String getName() {
@@ -91,6 +111,34 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+
+
+    public Long getId() {
+        return id;
+    }
+
+
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+
+
+    public List<Role> getRoles() {
+        return roles;
+    }
+
+
+
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
+    }
+
+    public UserDto toDto() {
+        return new UserDto(id, name, email);
     }
 
 }

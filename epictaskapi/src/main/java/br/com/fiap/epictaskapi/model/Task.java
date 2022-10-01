@@ -4,32 +4,33 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 
 @Entity
 public class Task {
- 
+
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NotBlank(message = "titulo é obrigatório")
     private String title;
     private String description;
+
+    @Min(1)
     private int score;
     private int status;
-    
+
     public Task() {
     }
 
-    public Task(String title, String description) {
-        this.title = title;
-        this.description = description;
-    }
-
-    public Task(String title, String description, int score) {
+    public Task(@NotBlank(message = "titulo é obrigatório") String title, String description, @Min(1) int score) {
         this.title = title;
         this.description = description;
         this.score = score;
     }
 
-    public Task(String title, String description, int score, int status) {
+    public Task(Long id, String title, String description, int score, int status) {
+        this.id = id;
         this.title = title;
         this.description = description;
         this.score = score;
@@ -81,6 +82,5 @@ public class Task {
         return "Task [description=" + description + ", id=" + id + ", score=" + score + ", status=" + status
                 + ", title=" + title + "]";
     }
-
 
 }

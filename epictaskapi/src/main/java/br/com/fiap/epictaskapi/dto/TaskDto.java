@@ -1,7 +1,8 @@
 package br.com.fiap.epictaskapi.dto;
 
-
 public record TaskDto (
+
+     Long id,
      String title,
      String description,
      int score,
@@ -10,7 +11,7 @@ public record TaskDto (
 ) {
 
      public TaskDto(String title, String description){
-          this(title, description, 100, 0);
+          this(0l, title, description, 100, 0);
      }
 
 }

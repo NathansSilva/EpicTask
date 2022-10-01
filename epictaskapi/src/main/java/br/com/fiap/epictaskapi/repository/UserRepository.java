@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import br.com.fiap.epictaskapi.model.User;
 
 public interface UserRepository extends JpaRepository<User, Long> {
-
-    Optional<User> findByEmail(String username);
+ 
+    Optional<User> findByEmail(String email);
 
 }

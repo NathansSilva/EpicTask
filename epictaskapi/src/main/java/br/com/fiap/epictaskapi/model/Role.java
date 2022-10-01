@@ -12,8 +12,7 @@ import org.springframework.security.core.GrantedAuthority;
 @Table(name = "TB_ROLE")
 public class Role implements GrantedAuthority {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
 
